@@ -3,7 +3,7 @@
 #define INC_STM32L476XX_H_
 
 #include <stdint.h>
-
+#include <stddef.h>
 
 /*
  * 	Microprocessor Defines
@@ -37,6 +37,9 @@ typedef enum
 	EXTI3_IRQNumber = 9,
 	EXTI4_IRQNumber = 10,
 	EXTI9_5IRQNumber = 23,
+	SPI1_IRQNumber = 35,
+	SPI2_IRQNumber = 36,
+	SPI3_IRQNumber = 51,
 	EXTI15_10_IRQNumber = 40
 
 }IRQNumber_Typedef_t;
@@ -293,9 +296,14 @@ typedef struct
 #define RCC_APB1ENR1_SPI3EN			RCC_APB1ENR1_SPI3EN_Mask			// RCC APB1ENR1	register SPI3EN Macro
 
 
-#define SPI_SR_Busy_Pos				(7U)
-#define SPI_Enable_Pos				(6U)
-#define SPI_SR_TxE_Pos				(1U)
+#define SPI_SR_Busy_Pos				(7U)			/* Bit 7 Busy flag */
+#define SPI_Enable_Pos				(6U)			/* Bit 6 SPE: SPI enable */
+#define SPI_SR_TxE_Pos				(1U)			/* Bit 1 TXE: Transmit buffer empty 1: Tx buffer empty */
+#define SPI_SR_RxNE_Pos				(0U)			/* Bit 0 RXNE: Receive buffer not empty 1: Rx buffer not empty */
+
+#define SPI_CR2_TXEIE				(7U)			/* SPI TX INTERRUPT ENABLE POS */
+#define SPI_CR2_RXNEIE				(6U)			/* SPI RX INTERRUPT ENABLE POS */
+#define SPI_CR1_DFF					(11U)			/* SPI Data Frame Format POS */
 
 /*
  * SPI Flag Definitions
@@ -304,9 +312,15 @@ typedef struct
 
 
 #define SPI_TxE_FLAG				(0x1U << SPI_SR_TxE_Pos)
+#define SPI_RxNE_FLAG				(0x1U << SPI_SR_RxNE_Pos)
+
 #define SPI_Bussy_FLAG				(0x1U << SPI_SR_Busy_Pos)
 
 
+#include "GPIO.h"
+#include "EXTI.h"
+#include "RCC.h"
+#include "SPI.h"
 
 
 #endif /* INC_STM32L476XX_H_ */
