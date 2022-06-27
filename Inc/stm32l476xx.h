@@ -23,7 +23,7 @@
 
 typedef enum
 {
-	DISABLE = 0x1U,
+	DISABLE = 0x0U,
 	ENABLE = !DISABLE
 
 }FunctionalState_t;
@@ -39,8 +39,9 @@ typedef enum
 	EXTI9_5IRQNumber = 23,
 	SPI1_IRQNumber = 35,
 	SPI2_IRQNumber = 36,
-	SPI3_IRQNumber = 51,
-	EXTI15_10_IRQNumber = 40
+	USART2_IRQNumber = 38,
+	EXTI15_10_IRQNumber = 40,
+	SPI3_IRQNumber = 51
 
 }IRQNumber_Typedef_t;
 
@@ -109,7 +110,9 @@ typedef enum
 
 #define SPI1_BASE_ADDR				(APB2_BASE_ADDR + 0X03000UL)	/* SPI 1 Base Address				*/
 
-#define USART1_BASE_ADDR			(APB2_BASE_ADDR + 0x03800UL)	/* USART 2 Base Address				*/
+#define USART1_BASE_ADDR			(APB2_BASE_ADDR + 0x03800UL)	/* USART 1 Base Address				*/
+
+
 
 
 
@@ -239,22 +242,46 @@ typedef struct
 
 }SPI_Typedef_t;
 
-#define	GPIOA						( (GPIO_Typedef_t *)(GPIOA_BASE_ADDR) )
-#define	GPIOB						( (GPIO_Typedef_t *)(GPIOB_BASE_ADDR) )
-#define	GPIOC						( (GPIO_Typedef_t *)(GPIOC_BASE_ADDR) )
-#define	GPIOD						( (GPIO_Typedef_t *)(GPIOD_BASE_ADDR) )
-#define	GPIOE						( (GPIO_Typedef_t *)(GPIOE_BASE_ADDR) )
+typedef struct
+{
+	__IO uint32_t CR1;				/*!< USART Control Register 1	 						Address Offset == 0x00 */
+	__IO uint32_t CR2;				/*!< USART Control Register 2 							Address Offset == 0x04 */
+	__IO uint32_t CR3;				/*!< USART Control Register 3 							Address Offset == 0x08 */
+	__IO uint32_t BRR;				/*!< USART baud rate register							Address Offset == 0x0C */
+	__IO uint32_t GTPR;				/*!< USART guard time and prescaler register 			Address Offset == 0x10 */
+	__IO uint32_t RTOR;				/*!< USART receiver timeout register 					Address Offset == 0x14 */
+	__IO uint32_t RQR;				/*!< USART request register 							Address Offset == 0x18 */
+	__IO uint32_t ISR;				/*!< USART interrupt and status register				Address Offset == 0x10 */
+	__IO uint32_t ICR;				/*!< USART interrupt flag clear register 				Address Offset == 0x14 */
+	__IO uint32_t RDR;				/*!< USART receive data register 						Address Offset == 0x18 */
+	__IO uint32_t TDR;				/*!< USART transmit data register 						Address Offset == 0x10 */
 
-#define RCC							( (RCC_Typedef_t* )(RCC_BASE_ADDR) )
+}USART_Typedef_t;
 
-#define SYSCFG						( (SYSCFG_Typedef_t* )(SYSCFG_BASE_ADDR) )
 
-#define EXTI						( (EXTI_Typedef_t* )(EXTI_BASE_ADDR) )
+#define	GPIOA						( (GPIO_Typedef_t *)(GPIOA_BASE_ADDR) )				/* 	AHB2 HIGH BUS */
+#define	GPIOB						( (GPIO_Typedef_t *)(GPIOB_BASE_ADDR) )				/* 	AHB2 HIGH BUS */
+#define	GPIOC						( (GPIO_Typedef_t *)(GPIOC_BASE_ADDR) )				/* 	AHB2 HIGH BUS */
+#define	GPIOD						( (GPIO_Typedef_t *)(GPIOD_BASE_ADDR) )				/* 	AHB2 HIGH BUS */
+#define	GPIOE						( (GPIO_Typedef_t *)(GPIOE_BASE_ADDR) )				/* 	AHB2 HIGH BUS */
 
-#define SPI1						( (SPI_Typedef_t * )(SPI1_BASE_ADDR) )
-#define SPI2						( (SPI_Typedef_t * )(SPI2_BASE_ADDR) )
-#define SPI3						( (SPI_Typedef_t * )(SPI3_BASE_ADDR) )
+#define RCC							( (RCC_Typedef_t* )(RCC_BASE_ADDR) )				/* 	AHB1 High Bus */
 
+#define SYSCFG						( (SYSCFG_Typedef_t* )(SYSCFG_BASE_ADDR) )			/* 	APB2 Peripherals Bus */
+
+#define EXTI						( (EXTI_Typedef_t* )(EXTI_BASE_ADDR) )				/* 	APB2 Peripherals Bus */
+
+#define SPI1						( (SPI_Typedef_t * )(SPI1_BASE_ADDR) )				/* 	APB2 Peripherals Bus */
+#define SPI2						( (SPI_Typedef_t * )(SPI2_BASE_ADDR) )				/* 	APB1 Peripherals Bus */
+#define SPI3						( (SPI_Typedef_t * )(SPI3_BASE_ADDR) )				/* 	APB1 Peripherals Bus */
+
+
+#define USART1						( (USART_Typedef_t*)(USART1_BASE_ADDR) )			/* 	APB2 Peripherals Bus */
+
+#define USART2						( (USART_Typedef_t*)(USART2_BASE_ADDR) )			/* 	APB1 Peripherals Bus */
+#define USART3						( (USART_Typedef_t*)(USART3_BASE_ADDR) )			/* 	APB1 Peripherals Bus */
+#define UART4						( (USART_Typedef_t*)(UART4_BASE_ADDR) )				/* 	APB1 Peripherals Bus */
+#define UART5						( (USART_Typedef_t*)(UART5_BASE_ADDR) )				/* 	APB1 Peripherals Bus */
 
 
 
@@ -296,6 +323,34 @@ typedef struct
 #define RCC_APB1ENR1_SPI3EN			RCC_APB1ENR1_SPI3EN_Mask			// RCC APB1ENR1	register SPI3EN Macro
 
 
+
+#define RCC_APB2ENR_USART1EN_Pos		(14U)								// RCC APB2ENR	register USART1EN Bit Position
+#define RCC_APB2ENR_USART1EN_Msk		(1 << RCC_APB2ENR_USART1EN_Pos)		// RCC APB2ENR	register USART1EN Bit Mask
+#define RCC_APB2ENR_USART1EN			RCC_APB2ENR_USART1EN_Msk			// RCC APB2ENR	register USART1EN Macro
+
+#define RCC_APB1ENR1_USART2EN_Pos		(17U)								// RCC APB1ENR1	register USART2EN Bit Position
+#define RCC_APB1ENR1_USART2EN_Msk		(1 << RCC_APB1ENR1_USART2EN_Pos)	// RCC APB1ENR1 register USART2EN Bit Mask
+#define RCC_APB1ENR1_USART2EN			RCC_APB1ENR1_USART2EN_Msk			// RCC APB1ENR1	register USART2EN Macro
+
+#define RCC_APB1ENR1_USART3EN_Pos		(18U)								// RCC APB1ENR1	register USART3EN Bit Position
+#define RCC_APB1ENR1_USART3EN_Msk		(1 << RCC_APB1ENR1_USART3EN_Pos)	// RCC APB1ENR1	register USART3EN Bit Mask
+#define RCC_APB1ENR1_USART3EN			RCC_APB1ENR1_USART3EN_Msk			// RCC APB1ENR1	register USART3EN Macro
+
+#define RCC_APB1ENR1_UART4EN_Pos		(19U)								// RCC APB1ENR1	register UART4EN Bit Position
+#define RCC_APB1ENR1_UART4EN_Msk		(1 << RCC_APB1ENR1_UART4EN_Pos)		// RCC APB1ENR1	register UART4EN Bit Mask
+#define RCC_APB1ENR1_UART4EN			RCC_APB1ENR1_UART4EN_Msk			// RCC APB1ENR1	register UART4EN Macro
+
+#define RCC_APB1ENR1_UART5EN_Pos		(20U)								// RCC APB1ENR1	register UART5EN Bit Position
+#define RCC_APB1ENR1_UART5EN_Msk		(1 << RCC_APB1ENR1_UART5EN_Pos)		// RCC APB1ENR1	register UART5EN Bit Mask
+#define RCC_APB1ENR1_UART5EN			RCC_APB1ENR1_UART5EN_Msk			// RCC APB1ENR1	register UART5EN Macro
+
+
+/*
+ * SPI Flag Position Definitions
+ *
+ */
+
+
 #define SPI_SR_Busy_Pos				(7U)			/* Bit 7 Busy flag */
 #define SPI_Enable_Pos				(6U)			/* Bit 6 SPE: SPI enable */
 #define SPI_SR_TxE_Pos				(1U)			/* Bit 1 TXE: Transmit buffer empty 1: Tx buffer empty */
@@ -317,10 +372,35 @@ typedef struct
 #define SPI_Bussy_FLAG				(0x1U << SPI_SR_Busy_Pos)
 
 
+/*
+ * USART Flag Position Definitions
+ *
+ */
+
+#define USART_CR2_STOP_Pos			(12U)
+
+#define USART_ISR_TXE_Pos			(7U)
+#define USART_ISR_TC_Pos			(6U)
+#define USART_ISR_RXNE_Pos			(5U)
+#define USART_EN_Pos				(0U)	/*Bit 0 UE: USART enable*/
+#define USART_CR1_TXEIE_Pos			(7U)	//Bit 7 TXEIE: interrupt enable
+#define USART_CR1_RXNEIE_Pos		(5U)
+
+
+/*
+ * USART Flag Definitions
+ *
+ */
+
+
+#define USART_ISR_TXE_Flag			(0x1U << USART_ISR_TXE_Pos) // 7 TXE: Transmit data register empty
+#define USART_ISR_TC_Flag			(0x1U << USART_ISR_TC_Pos) // 6 TC:  Transmission complete
+#define USART_ISR_RXNE_Flag			(0x1U << USART_ISR_RXNE_Pos) // 5 RXNE: T Read data register not empty
+
 #include "GPIO.h"
 #include "EXTI.h"
 #include "RCC.h"
 #include "SPI.h"
-
+#include "USART.h"
 
 #endif /* INC_STM32L476XX_H_ */
